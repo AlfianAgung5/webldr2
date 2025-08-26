@@ -3,20 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title> My Love ❤️</title>
+    <title>My Love ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /*
-        ------------------------------------------
-        GLOBAL STYLES & UTILITIES
-        ------------------------------------------
-        */
         :root {
-            --primary-pink: #FFC0CB; /* Light Pink */
-            --primary-red: #E74C3C;   /* Strong Red */
-            --secondary-blue: #ADD8E6; /* Light Blue */
-            --bg-light: #FCE4EC;      /* Very Light Pink */
-            --bg-dark: #2C3E50;       /* Dark Blue-Gray */
+            --primary-pink: #FFC0CB;
+            --primary-red: #E74C3C;
+            --secondary-blue: #ADD8E6;
+            --bg-light: #FCE4EC;
+            --bg-dark: #2C3E50;
             --text-dark: #2C3E50;
             --text-light: #F8F8F8;
             --shadow-soft: 0 8px 30px rgba(0,0,0,0.15);
@@ -26,21 +21,30 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: none;
         }
-
-        html, body {
+        
+        body {
             height: 100%;
-            overflow: hidden; /* Prevent scrolling initially */
+            overflow: hidden;
             background-color: var(--bg-light);
             font-family: 'Poppins', sans-serif;
             color: var(--text-dark);
         }
+        
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.2s ease;
+        }
+        
+        .custom-cursor.hidden {
+            opacity: 0;
+        }
 
-        /*
-        ------------------------------------------
-        FLOWER PETAL ANIMATION
-        ------------------------------------------
-        */
         .petal-container {
             position: fixed;
             top: 0;
@@ -71,11 +75,6 @@
             to { opacity: 1; }
         }
 
-        /*
-        ------------------------------------------
-        MAIN PAGE LAYOUT
-        ------------------------------------------
-        */
         .page-container {
             position: relative;
             width: 100vw;
@@ -95,18 +94,20 @@
             padding: 20px;
             text-align: center;
             position: relative;
-            overflow: hidden;
         }
         
         .page:nth-child(1) { background: linear-gradient(135deg, var(--primary-pink), var(--secondary-blue)); }
         .page:nth-child(2) { background: var(--bg-light); }
         .page:nth-child(3) { background: var(--bg-dark); color: var(--text-light); }
 
-        /*
-        ------------------------------------------
-        PAGE 1: ENVELOPE
-        ------------------------------------------
-        */
+        /* Perubahan di sini */
+        .page-3 {
+            overflow-y: auto;
+            align-items: center; /* Kembali ke tengah untuk judul */
+            justify-content: flex-start; /* Untuk menempatkan konten dari atas */
+            padding-top: 50px; /* Jarak dari atas halaman */
+        }
+
         .page h1 {
             font-family: 'Dancing Script', cursive;
             font-size: 3rem;
@@ -186,11 +187,6 @@
             box-shadow: none;
         }
 
-        /*
-        ------------------------------------------
-        PAGE 2: LETTER
-        ------------------------------------------
-        */
         .letter-content {
             width: 100%;
             max-width: 800px;
@@ -207,6 +203,12 @@
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: var(--primary-red);
+        }
+        
+        .page-3 .section-heading {
+            color: var(--secondary-blue);
+            margin-top: 0;
+            margin-bottom: 40px; /* Menambah jarak di bawah judul untuk grid */
         }
 
         .typing-text {
@@ -230,18 +232,13 @@
             50% { visibility: visible; }
         }
 
-        /*
-        ------------------------------------------
-        PAGE 3: GALLERY
-        ------------------------------------------
-        */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             width: 100%;
             max-width: 1000px;
-            padding: 20px;
+            padding: 0 20px 50px 20px; /* Menyesuaikan padding agar tidak terlalu mepet ke atas dan ada ruang scroll di bawah */
         }
         
         .gallery-item {
@@ -290,11 +287,6 @@
             opacity: 1;
         }
         
-        /*
-        ------------------------------------------
-        MODAL (POP-UP)
-        ------------------------------------------
-        */
         .modal {
             display: none;
             position: fixed;
@@ -336,12 +328,20 @@
             color: #bbb;
             text-decoration: none;
         }
+        
+        .heart-sparkle {
+            position: absolute;
+            font-size: 16px;
+            color: var(--primary-red);
+            animation: sparkle-fade-out 1s forwards;
+            pointer-events: none;
+        }
 
-        /*
-        ------------------------------------------
-        RESPONSIVE & ADAPTIVE LAYOUT
-        ------------------------------------------
-        */
+        @keyframes sparkle-fade-out {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
         @media (orientation: landscape) {
             .page-container {
                 flex-direction: row;
@@ -358,6 +358,7 @@
 <body>
 
     <div class="petal-container" id="petal-container"></div>
+    <div class="custom-cursor" id="cursor"></div>
 
     <div class="page-container" id="page-container">
 
@@ -378,7 +379,7 @@
         </div>
 
         <div class="page page-3">
-            <h2 class="section-heading" style="color: var(--secondary-blue);">Galeri Kita</h2>
+            <h2 class="section-heading">Galeri Kita</h2>
             <div class="gallery-grid">
 
                 <div class="gallery-item" data-src="picture1.jpg" data-alt="Momen romantis 1">
@@ -406,19 +407,27 @@
                     <div class="gallery-overlay">Lihat Lebih Dekat</div>
                 </div>
 
-                <div class="gallery-item" data-src="picture6.jpg" data-alt="Momen romantis 5">
-                    <img src="picture6.jpg" alt="Momen romantis 5">
+                <div class="gallery-item" data-src="picture6.jpg" data-alt="Momen romantis 6">
+                    <img src="picture6.jpg" alt="Momen romantis 6">
                     <div class="gallery-overlay">Lihat Lebih Dekat</div>
                 </div>
-                <div class="gallery-item" data-src="picture6.jpg" data-alt="Momen romantis 5">
-                    <img src="picture6.jpg" alt="Momen romantis 5">
+                
+                <div class="gallery-item" data-src="picture7.jpg" data-alt="Momen romantis 7">
+                    <img src="picture7.jpg" alt="Momen romantis 7">
                     <div class="gallery-overlay">Lihat Lebih Dekat</div>
                 </div>
-                    <div class="gallery-item" data-src="picture6.jpg" data-alt="Momen romantis 5">
-                    <img src="picture6.jpg" alt="Momen romantis 5">
+                
+                <div class="gallery-item" data-src="picture8.jpg" data-alt="Momen romantis 8">
+                    <img src="picture8.jpg" alt="Momen romantis 8">
                     <div class="gallery-overlay">Lihat Lebih Dekat</div>
                 </div>
+                
+                <div class="gallery-item" data-src="picture9.jpg" data-alt="Momen romantis 9">
+                    <img src="picture9.jpg" alt="Momen romantis 9">
+                    <div class="gallery-overlay">Lihat Lebih Dekat</div>
                 </div>
+            
+            </div>
         </div>
     </div>
 
@@ -427,8 +436,12 @@
         <img class="modal-content" id="modal-image">
     </div>
 
+    <audio id="romantic-song" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
-        // Data untuk surat
         const loveLetter = `Dear My Love, My Heart, and My Everything,
 Happy Birthday to the one who makes my world brighter every single day. I want you to know that no candle could ever shine as brightly as you do in my life
 Today i celebrate you, not only the day you were born, but also the countless ways you make my life worth living.
@@ -440,15 +453,16 @@ Alfian Agung`;
         const envelope = document.getElementById('envelope');
         const pageContainer = document.getElementById('page-container');
         const typingTextElement = document.getElementById('typing-text');
+        const romanticSong = document.getElementById('romantic-song');
         
-        // Modal elements
         const modal = document.getElementById('image-modal');
         const modalImage = document.getElementById('modal-image');
         const closeModal = document.getElementsByClassName('close-modal')[0];
+        
+        const cursor = document.getElementById('cursor');
 
         let currentPage = 0;
 
-        // Fungsi untuk efek kelopak bunga
         function createPetals() {
             const petalContainer = document.getElementById('petal-container');
             const petalCount = 50;
@@ -462,10 +476,9 @@ Alfian Agung`;
             }
         }
         
-        // Fungsi untuk efek mengetik
         function startTypingEffect() {
             let i = 0;
-            const speed = 40; // Kecepatan ketik
+            const speed = 40;
             const cursor = document.createElement('span');
             cursor.classList.add('typing-cursor');
             typingTextElement.appendChild(cursor);
@@ -478,14 +491,16 @@ Alfian Agung`;
                 } else {
                     cursor.remove();
                     setTimeout(() => {
-                        swipePage(1); // Swipe ke halaman galeri
+                        swipePage(1);
+                        if (romanticSong.paused) {
+                           romanticSong.play().catch(e => console.log('Autoplay blocked:', e));
+                        }
                     }, 2000);
                 }
             };
             typeWriter();
         }
 
-        // Fungsi untuk menggeser halaman
         function swipePage(direction) {
             currentPage += direction;
             if (currentPage < 0) currentPage = 0;
@@ -498,29 +513,24 @@ Alfian Agung`;
             }
         }
 
-        // Fungsi utama saat tombol diklik
         openButton.addEventListener('click', () => {
             openButton.disabled = true;
             openButton.textContent = 'Membuka...';
-
             envelope.classList.add('open');
-
             setTimeout(() => {
-                swipePage(1); // Geser ke halaman surat
+                swipePage(1);
                 startTypingEffect();
             }, 1000);
         });
         
-        // Navigasi dengan swipe (untuk sentuhan) atau klik
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
+            if (e.key === 'ArrowRight' && currentPage < 2) {
                 swipePage(1);
-            } else if (e.key === 'ArrowLeft') {
+            } else if (e.key === 'ArrowLeft' && currentPage > 0) {
                 swipePage(-1);
             }
         });
 
-        // Modal (Pop-up) untuk galeri
         document.querySelectorAll('.gallery-item').forEach(item => {
             item.addEventListener('click', () => {
                 modal.style.display = 'block';
@@ -539,7 +549,29 @@ Alfian Agung`;
             }
         });
 
-        // Initialize on load
+        function createHeartSparkle(x, y) {
+            const heart = document.createElement('span');
+            heart.classList.add('heart-sparkle');
+            heart.innerHTML = '❤️';
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            createHeartSparkle(e.clientX, e.clientY);
+        });
+
+        document.addEventListener('touchstart', (e) => {
+            for (let i = 0; i < e.touches.length; i++) {
+                createHeartSparkle(e.touches[i].clientX, e.touches[i].clientY);
+            }
+        });
+
         window.addEventListener('load', () => {
             createPetals();
         });
